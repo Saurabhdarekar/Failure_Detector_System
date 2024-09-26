@@ -2,6 +2,7 @@ package java.org.example;
 
 import org.example.Server;
 import org.example.service.Log.ClientComponent;
+import org.example.service.LogServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -32,9 +33,9 @@ public class GrepTest {
 
         Thread serverThread = new Thread(() -> {
             try {
-                Server s = new Server();
+                LogServer s = new LogServer();
                 logger.info("Starting Server in Grep Test");
-                s.runClient();
+                s.start();
             } catch (Exception e) {
                throw new RuntimeException("Error while running Server in GrepTest", e);
             }

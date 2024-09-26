@@ -1,6 +1,7 @@
 package org.example.entities;
 
 public class Member {
+    String name;
     String ipAddress;
     int port;
     String versionNo;
@@ -10,6 +11,21 @@ public class Member {
         this.ipAddress = ipAddress;
         this.port = port;
         this.versionNo = versionNo;
+    }
+
+    public Member(String name, String ipAddress, int port, String versionNo) {
+        this.name = name;
+        this.ipAddress = ipAddress;
+        this.port = port;
+        this.versionNo = versionNo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getStatus() {

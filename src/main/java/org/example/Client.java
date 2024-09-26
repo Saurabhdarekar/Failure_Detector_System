@@ -18,8 +18,8 @@ public class Client {
     public static void main(String[] args) {
 
         try {
-            PingSender pingSender = new PingSender();
-            pingSender.sendEcho("Hello");
+//            PingSender pingSender = new PingSender();
+//            pingSender.sendEcho("Hello");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

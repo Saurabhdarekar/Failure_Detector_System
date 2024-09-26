@@ -1,16 +1,17 @@
 package org.example.service.Ping;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.entities.FDProperties;
 import org.example.entities.Member;
 import org.example.entities.MembershipList;
 import org.example.entities.Message;
-import org.example.service.Introducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class PingReceiver extends Thread{
     private static final Logger logger = LoggerFactory.getLogger(PingReceiver.class);
@@ -20,12 +21,12 @@ public class PingReceiver extends Thread{
     private byte[] buf = new byte[256];
 
     public PingReceiver() throws SocketException {
-        serverSocket = new DatagramSocket(4445);
+        serverSocket = new DatagramSocket((int)FDProperties.getFDProperties().get("machinePort"));
     }
 
     public void run() {
         running = true;
-        System.out.println("Ping server started");
+        System.out.println("Listener service for Dissemination Component started");
         while (running) {
             DatagramPacket packet = new DatagramPacket(buf, buf.length);
             try {
@@ -43,29 +44,95 @@ public class PingReceiver extends Thread{
             Message message = Message.process(address, port, received);
 
             //TODO based on the message received take the action
+            //TODO add the introducer under this class and set a flag of if introducer then only execute the below code
+            //TODO same will be for suspicion mode.
             //Add a switch case
             switch (message.getMessageName()){
-                case "ping":
-                    logger.info("Ping received");
-                    try {
-                        PingSender pingSender = new PingSender();
-                        Message sendMessage = new Message("ping-ack", message.getIpAddress(), message.getPort(),
-                                new ArrayList<>(Arrays.asList("alive", message.getMessageContent().get(1))));
-                        String result = pingSender.sendPing(sendMessage);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                case "alive":
-                    logger.info("Alive message received");
+                case "introduction":
+                    logger.info("Introduction successful message received");
                     MembershipList.addMember(
-                            new Member(address.toString(), port, message.getMessageContent().get(0))
+                            new Member((String) message.getMessageContent().get("senderName"),
+                                    (String) message.getMessageContent().get("senderIp"),
+                                    Integer.parseInt((String) message.getMessageContent().get("senderPort")),
+                                    (String) message.getMessageContent().get("version"))
                     );
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<String,Member> map = mapper.convertValue(message.getMessageContent(), Map.class);
+                    map.forEach((k,v) -> {System.out.println(k+":"+v);});
+                    MembershipList.printMembers();
+                case "alive":
+                    if(message.getMessageContent().get("isIntroducing").equals("true") && (Boolean) FDProperties.getFDProperties().get("isIntroducer")){
+                        logger.info("A node wants to join a group with ip address " + packet.getAddress() + ":" + packet.getPort()
+                                + " with version " + message);
+                        String result = "";
+                        //if a node sends an alive message to join the group then multicast that message to everyone
+                        try {
+                            PingSender pingSender = new PingSender();
+                            result = pingSender.multicast(message);
+                            //add this member to its own list
+                            MembershipList.addMember(
+                                    new Member((String) message.getMessageContent().get("senderName"),
+                                            (String) message.getMessageContent().get("senderIp"),
+                                            Integer.parseInt((String) message.getMessageContent().get("senderPort")),
+                                            (String) message.getMessageContent().get("version"))
+                            );
+                            MembershipList.printMembers();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        if(result.equals("Successful")) {
+                            logger.info("Member Introduced in the Group");
+                            PingSender pingSender = new PingSender();
+                            Map<String, Object> messageContent = new HashMap<>();
+                            messageContent.put("messageName", "introduction");
+                            messageContent.put("senderName", (String) FDProperties.getFDProperties().get("machineName"));
+                            messageContent.put("senderIp", (String) FDProperties.getFDProperties().get("machineIp"));
+                            messageContent.put("senderPort", String.valueOf(FDProperties.getFDProperties().get("machinePort")));
+                            messageContent.put("msgId", FDProperties.generateRandomMessageId());
+                            messageContent.put("isIntroducing", "false");
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            try {
+                                String json = objectMapper.writeValueAsString(messageContent);
+                                messageContent.put("members", json);
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+                            try {
+                                Message introduceBackMessage = new Message("alive",
+                                        (String) message.getMessageContent().get("senderIp"),
+                                        Integer.parseInt((String) message.getMessageContent().get("senderPort")),
+                                        messageContent);
+                                pingSender.sendMessage(introduceBackMessage);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }else {
+                        logger.info("Alive message received");
+                        MembershipList.addMember(
+                                new Member((String) message.getMessageContent().get("senderName"),
+                                        (String) message.getMessageContent().get("senderIp"),
+                                        Integer.parseInt((String) message.getMessageContent().get("senderPort")),
+                                        (String) message.getMessageContent().get("version"))
+                        );
+                        MembershipList.printMembers();
+                    }
                     break;
                 case "failed" :
                     logger.info("Failed message received");
-                    MembershipList.removeMember(address);
+                    MembershipList.removeMember((String) message.getMessageContent().get("senderIp"));
                     break;
+                case "suspect" :
+                    logger.info("Suspect message received");
+                    //TODO add a piece of code to set the status of a member to suspect
+                    //TODO add a piece of code which will send alive multicast if the suspect node is itself
+                    break;
+                case "confirm" :
+                    logger.info("Confirm message received");
+                    //TODO add a piece of code that will remove the member from the list
+//                    MembershipList.removeMember(address);
+                    break;
+                default:
             }
         }
         serverSocket.close();

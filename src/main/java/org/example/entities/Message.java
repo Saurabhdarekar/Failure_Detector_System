@@ -1,25 +1,29 @@
 package org.example.entities;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Message {
     String messageName;
     InetAddress ipAddress;
     int port;
-    ArrayList<String> messageContent;
+    Map<String,Object> messageContent;
 
-    public Message(String messageName, String ipAddress, int port, ArrayList<String> messageContent) throws UnknownHostException {
+    public Message(String messageName, String ipAddress, int port, Map<String,Object> messageContent) throws UnknownHostException {
         this.messageName = messageName;
         this.ipAddress = InetAddress.getByName(ipAddress);
         this.port = port;
         this.messageContent = messageContent;
     }
 
-    public Message(String messageName, InetAddress ipAddress, int port, ArrayList<String> messageContent) {
+    public Message(String messageName, InetAddress ipAddress, int port, Map<String,Object> messageContent) {
         this.messageName = messageName;
         this.ipAddress = ipAddress;
         this.port = port;
@@ -27,9 +31,14 @@ public class Message {
     }
 
     public static Message process(InetAddress address, int port, String input) {
-        String[] words = input.split("|");
-        ArrayList<String> messageContent = new ArrayList<>(Arrays.asList(words).subList(1, words.length));
-        return new Message(words[0], address, port, messageContent);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Map<String, Object> messageContent = mapper.readValue(input, Map.class);
+            return new Message(String.valueOf(messageContent.get("messageName")), address, port, messageContent);
+        }catch (Exception e){
+            System.out.println("error while processing the input json format");
+            throw new RuntimeException("error while processing the input json format");
+        }
     }
 
     public String getMessageName() {
@@ -56,11 +65,11 @@ public class Message {
         this.port = port;
     }
 
-    public ArrayList<String> getMessageContent() {
+    public Map getMessageContent() {
         return messageContent;
     }
 
-    public void setMessageContent(ArrayList<String> messageContent) {
+    public void setMessageContent(Map messageContent) {
         this.messageContent = messageContent;
     }
 }
