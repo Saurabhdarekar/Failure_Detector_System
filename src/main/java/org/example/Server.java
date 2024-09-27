@@ -80,7 +80,7 @@ public class Server {
         list and start the pinging process again.
         */
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         }catch (InterruptedException e){
             e.printStackTrace();
         }
@@ -88,7 +88,7 @@ public class Server {
         if(((Boolean) FDProperties.getFDProperties().get("isIntroducer"))) {
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             FDServer task = new FDServer(dissemination);
-            executor.scheduleAtFixedRate(task.send(), 0, 10, TimeUnit.SECONDS);
+            executor.scheduleAtFixedRate(task.send(), 0, 5, TimeUnit.SECONDS);
 //        executor.scheduleAtFixedRate(task.send(), 0, (int) FDProperties.getFDProperties().get("protocolPeriod"), TimeUnit.SECONDS);
         }
     }

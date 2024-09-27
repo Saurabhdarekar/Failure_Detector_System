@@ -32,6 +32,7 @@ public class PingSender extends Thread {
             socket.setSoTimeout(waitPeriod);
             ObjectMapper objectMapper = new ObjectMapper();
             String s = objectMapper.writeValueAsString(message.getMessageContent());
+            System.out.println(s);
             byte[] buf = s.getBytes();
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
@@ -42,6 +43,7 @@ public class PingSender extends Thread {
             socket.receive(packet);
             String received = new String(
                     packet.getData(), 0, packet.getLength());
+            System.out.println(received);
             InetAddress address = packet.getAddress();
             int port = packet.getPort();
             Message replyMessage = Message.process(address, String.valueOf(port), received);
@@ -64,6 +66,7 @@ public class PingSender extends Thread {
             socket.setSoTimeout((int)FDProperties.getFDProperties().get("ackWaitPeriod"));
             ObjectMapper objectMapper = new ObjectMapper();
             String s = objectMapper.writeValueAsString(message.getMessageContent());
+            System.out.println(s);
             byte[] buf = s.getBytes();
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
@@ -73,6 +76,7 @@ public class PingSender extends Thread {
             socket.receive(packet);
             String received = new String(
                     packet.getData(), 0, packet.getLength());
+            System.out.println(received);
             InetAddress address = packet.getAddress();
             int port = packet.getPort();
             Message replyMessage = Message.process(address, String.valueOf(port), received);
@@ -139,7 +143,7 @@ public class PingSender extends Thread {
             } catch (UnknownHostException e) {
                 throw new RuntimeException(e);
             }
-            sendPing(message);
+            sendMessage(message);
         });
         return "Successful";
     }

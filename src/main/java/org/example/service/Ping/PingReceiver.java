@@ -23,7 +23,7 @@ public class PingReceiver extends Thread{
     private DatagramSocket serverSocket;
     private boolean running;
     private ObjectMapper objectMapper;
-    private byte[] buf = new byte[16384];
+//    private byte[] buf = new byte[16384];
 
     public PingReceiver() throws SocketException {
         objectMapper = new ObjectMapper();
@@ -34,6 +34,7 @@ public class PingReceiver extends Thread{
         running = true;
         System.out.println("Listener service for Dissemination Component started");
         while (running) {
+            byte[] buf = new byte[16384];
             DatagramPacket packet = new DatagramPacket(buf, buf.length);
             try {
                 serverSocket.receive(packet);
@@ -43,7 +44,7 @@ public class PingReceiver extends Thread{
             System.out.println("Ping received");
             InetAddress address = packet.getAddress();
             int port = packet.getPort();
-            packet = new DatagramPacket(buf, buf.length, address, port);
+//            packet = new DatagramPacket(buf, buf.length, address, port);
             String received = new String(
                     packet.getData(), 0, packet.getLength());
 
@@ -68,6 +69,8 @@ public class PingReceiver extends Thread{
                         );
                         MembershipList.printMembers();
                         System.out.println("Receiving membership list");
+                        buf = new byte[16384];
+                        packet = new DatagramPacket(buf, buf.length, address, port);
                         serverSocket.receive(packet);
                         String json = new String(
                                 packet.getData(), 0, packet.getLength());
@@ -167,6 +170,7 @@ public class PingReceiver extends Thread{
                     messageContent.put("msgId", FDProperties.generateRandomMessageId());
                     System.out.println("Sending Ping Ack");
                     try {
+                        buf = new byte[16384];
                         buf = objectMapper.writeValueAsString(messageContent).getBytes();
                         DatagramPacket pingAckPacket
                                 = new DatagramPacket(buf, buf.length, address, port);
@@ -203,6 +207,7 @@ public class PingReceiver extends Thread{
                     pingREqJContent.put("senderPort", String.valueOf(FDProperties.getFDProperties().get("machinePort")));
                     System.out.println("Sending Ping Required J Ack");
                     try {
+                        buf = new byte[16384];
                         buf = objectMapper.writeValueAsString(pingREqJContent).getBytes();
                         DatagramPacket pingAckPacket
                                 = new DatagramPacket(buf, buf.length, address, port);
