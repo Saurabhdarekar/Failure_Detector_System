@@ -1,42 +1,40 @@
 package org.example.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Message {
     String messageName;
     InetAddress ipAddress;
-    int port;
+    String port;
     Map<String,Object> messageContent;
 
-    public Message(String messageName, String ipAddress, int port, Map<String,Object> messageContent) throws UnknownHostException {
+    public Message(String messageName, String ipAddress, String port, Map<String,Object> messageContent) throws UnknownHostException {
         this.messageName = messageName;
         this.ipAddress = InetAddress.getByName(ipAddress);
         this.port = port;
         this.messageContent = messageContent;
     }
 
-    public Message(String messageName, InetAddress ipAddress, int port, Map<String,Object> messageContent) {
+    public Message(String messageName, InetAddress ipAddress, String port, Map<String,Object> messageContent) {
         this.messageName = messageName;
         this.ipAddress = ipAddress;
         this.port = port;
         this.messageContent = messageContent;
     }
 
-    public static Message process(InetAddress address, int port, String input) {
+    public static Message process(InetAddress address, String port, String input) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             Map<String, Object> messageContent = mapper.readValue(input, Map.class);
             return new Message(String.valueOf(messageContent.get("messageName")), address, port, messageContent);
         }catch (Exception e){
             System.out.println("error while processing the input json format");
+            e.printStackTrace();
             throw new RuntimeException("error while processing the input json format");
         }
     }
@@ -57,11 +55,11 @@ public class Message {
         this.ipAddress = InetAddress.getByName(ipAddress);
     }
 
-    public int getPort() {
+    public String getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(String port) {
         this.port = port;
     }
 

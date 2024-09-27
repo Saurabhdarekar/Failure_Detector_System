@@ -1,11 +1,12 @@
 package org.example.entities;
 
-import java.net.InetAddress;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 public class MembershipList {
 
@@ -15,23 +16,34 @@ public class MembershipList {
         members.put(member.getName(), member);
     }
 
-    public static void removeMember(String address) {
-        members.remove(address);
+    public static void removeMember(String name) {
+        members.remove(name);
     }
 
     public static void printMembers() {
-        members.forEach((k, v) -> {System.out.println(k + ": " + v.port);});
+        members.forEach((k, v) -> {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                String json = mapper.writeValueAsString(v);
+                System.out.println(k + ": " + json);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public static Member getRandomMember() {
         List<String> keys = new ArrayList<>(members.keySet());
         // Check if map is not empty
         if (!keys.isEmpty()) {
-            // Get a random key
-            String randomKey = keys.get(ThreadLocalRandom.current().nextInt(keys.size()));
-            // Get the corresponding value
-            Member member = members.get(randomKey);
-            return new Member(member.getIpAddress(), member.getPort(), member.getVersionNo());
+            // Get a random key and the corresponding value
+            Member member = members.get(keys.get(ThreadLocalRandom.current().nextInt(keys.size())));
+            return new Member(member.getName(),
+                    member.getIpAddress(),
+                    member.getPort(),
+                    member.getVersionNo(),
+                    member.getStatus(),
+                    member.getDateTime());
         } else {
             System.out.println("Map is empty.");
         }

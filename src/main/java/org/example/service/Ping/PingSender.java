@@ -8,17 +8,17 @@ import org.example.entities.Message;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PingSender extends Thread {
 
     private volatile String result;
+    private volatile int waitPeriod;
     private Message message;
 
-    public PingSender(Message message) {
+    public PingSender(Message message, int waitPeriod) {
         this.message = message;
+        this.waitPeriod = waitPeriod;
     }
 
     public PingSender() {}
@@ -29,21 +29,22 @@ public class PingSender extends Thread {
         try {
             DatagramSocket socket = new DatagramSocket();
             //This node will wait for below timeout for the target node to send the ack
-            socket.setSoTimeout((int)FDProperties.getFDProperties().get("ackWaitPeriod"));
+            socket.setSoTimeout(waitPeriod);
             ObjectMapper objectMapper = new ObjectMapper();
             String s = objectMapper.writeValueAsString(message.getMessageContent());
             byte[] buf = s.getBytes();
             DatagramPacket packet
-                    = new DatagramPacket(buf, buf.length, message.getIpAddress(), message.getPort());
+                    = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
             socket.send(packet);
-
-            packet = new DatagramPacket(buf, buf.length);
+            System.out.println("Ping sent to " + message.getIpAddress() + ":" + message.getPort());
+            byte[] receivingBuf = new byte[16384];
+            packet = new DatagramPacket(receivingBuf, receivingBuf.length);
             socket.receive(packet);
             String received = new String(
                     packet.getData(), 0, packet.getLength());
             InetAddress address = packet.getAddress();
             int port = packet.getPort();
-            Message replyMessage = Message.process(address, port, received);
+            Message replyMessage = Message.process(address, String.valueOf(port), received);
             if (replyMessage.getMessageContent().get("messageName").equals("pingAck")) {
                 result = "Successful";
             }
@@ -65,16 +66,16 @@ public class PingSender extends Thread {
             String s = objectMapper.writeValueAsString(message.getMessageContent());
             byte[] buf = s.getBytes();
             DatagramPacket packet
-                    = new DatagramPacket(buf, buf.length, message.getIpAddress(), message.getPort());
+                    = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
             socket.send(packet);
-
-            packet = new DatagramPacket(buf, buf.length);
+            byte[] receivingBuf = new byte[16384];
+            packet = new DatagramPacket(receivingBuf, receivingBuf.length);
             socket.receive(packet);
             String received = new String(
                     packet.getData(), 0, packet.getLength());
             InetAddress address = packet.getAddress();
             int port = packet.getPort();
-            Message replyMessage = Message.process(address, port, received);
+            Message replyMessage = Message.process(address, String.valueOf(port), received);
             if (replyMessage.getMessageContent().get("messageName").equals("pingAck")) {
                 return "Successful";
             }
@@ -97,7 +98,26 @@ public class PingSender extends Thread {
             String s = objectMapper.writeValueAsString(message.getMessageContent());
             byte[] buf = s.getBytes();
             DatagramPacket packet
-                    = new DatagramPacket(buf, buf.length, message.getIpAddress(), message.getPort());
+                    = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
+            socket.send(packet);
+        }
+        catch (SocketTimeoutException e) {
+            // as the message time has timeout we will send an unsuccessful response
+            return "Unsuccessful";
+        } catch (IOException e) {
+            return "IOException";
+        }
+        return "Unsuccessful";
+    }
+
+    public String sendMessage(Message message, String json) {
+        try {
+            DatagramSocket socket = new DatagramSocket();
+            //This node will wait for below timeout for the target node to send the ack
+//            socket.setSoTimeout((int)FDProperties.getFDProperties().get("ackWaitPeriod"));
+            byte[] buf = json.getBytes();
+            DatagramPacket packet
+                    = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
             socket.send(packet);
         }
         catch (SocketTimeoutException e) {
@@ -136,7 +156,4 @@ public class PingSender extends Thread {
 //        return received;
 //    }
 
-    public void close() {
-//        socket.close();
-    }
 }

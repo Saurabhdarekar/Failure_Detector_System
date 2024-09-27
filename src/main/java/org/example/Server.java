@@ -1,5 +1,7 @@
 package org.example;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.config.AppConfig;
 import org.example.entities.FDProperties;
 import org.example.entities.Message;
@@ -46,7 +48,6 @@ public class Server {
 //                throw new RuntimeException(e);
 //            }
 //        }
-
         //TODO code to introduce itself
         if(!((Boolean) FDProperties.getFDProperties().get("isIntroducer"))) {
             PingSender pingSender = new PingSender();
@@ -61,7 +62,7 @@ public class Server {
                 logger.info("Sending alive message to introducer");
                 Message message = new Message("alive",
                         (String) FDProperties.getFDProperties().get("introducerAddress"),
-                        Integer.parseInt((String) FDProperties.getFDProperties().get("introducerPort")),
+                        ((String) FDProperties.getFDProperties().get("introducerPort")),
                         messageContent);
                 pingSender.sendMessage(message);
             } catch (Exception e) {
@@ -72,9 +73,23 @@ public class Server {
         Dissemination dissemination = new Dissemination();
         dissemination.startDisseminatorService();
 
+
+        /* WE can keep pinging the nodes in a loop so that we will get the responses from all healthy nodes quickly and then wait
+        for faulty nodes to reply through swim mechanism. Doing this we can achieve time bounded completeness.
+        We can also do a thing like in one loop ping all members within 5 seconds and after completion of 5 secs then randomize the
+        list and start the pinging process again.
+        */
+        try {
+            Thread.sleep(10000);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
         //start the Failure detector scheduler
-//        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-//        FDServer task = new FDServer(dissemination);
+        if(((Boolean) FDProperties.getFDProperties().get("isIntroducer"))) {
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            FDServer task = new FDServer(dissemination);
+            executor.scheduleAtFixedRate(task.send(), 0, 10, TimeUnit.SECONDS);
 //        executor.scheduleAtFixedRate(task.send(), 0, (int) FDProperties.getFDProperties().get("protocolPeriod"), TimeUnit.SECONDS);
+        }
     }
 }
