@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MembershipList {
 
     public static ConcurrentHashMap<String, Member> members = new ConcurrentHashMap<>();
-    public static ArrayList<String> memberNames = new ArrayList<>();
+    public static List<String> memberNames = new CopyOnWriteArrayList<>();
     public static int pointer;
     private static final Logger logger = LoggerFactory.getLogger(MembershipList.class);
 
