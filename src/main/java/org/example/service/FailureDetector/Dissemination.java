@@ -176,6 +176,19 @@ public class Dissemination {
 
     public String sendSwitch(){
         try{
+            //Switch mode for self
+            if((Boolean) FDProperties.getFDProperties().get("isSuspicionModeOn")) {
+                logger.info("Switching to Basic Swim");
+                FDProperties.getFDProperties().put("isSuspicionModeOn", false);
+                FDProperties.getFDProperties().put("ackWaitPeriod", FDProperties.getFDProperties().get("basicSwimWaitPeriod"));
+            }
+            else {
+                logger.info("Switching to Suspicion Mode");
+                FDProperties.getFDProperties().put("isSuspicionModeOn", true);
+                FDProperties.getFDProperties().put("ackWaitPeriod", FDProperties.getFDProperties().get("suspicionSwimWaitPeriod"));
+            }
+
+            //switch mode for others
             Map<String, Object> messageContent = new HashMap<>();
             messageContent.put("messageName", "switch");
             messageContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This class contains Server related logic
  */
-public class Server {
+public class Server{
 
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
@@ -46,8 +46,9 @@ public class Server {
 //            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             FDServer task = new FDServer(dissemination);
 //            executor.scheduleAtFixedRate(task.send(), 0, 5, TimeUnit.SECONDS);
-            while(true) {task.executeInstance();}
+            task.start();
 //        executor.scheduleAtFixedRate(task.send(), 0, (int) FDProperties.getFDProperties().get("protocolPeriod"), TimeUnit.SECONDS);
 //        }
+        System.out.println("hi");
     }
 }

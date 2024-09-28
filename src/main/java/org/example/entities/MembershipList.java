@@ -36,7 +36,7 @@ public class MembershipList {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 String json = mapper.writeValueAsString(v);
-                System.out.println(k + ": " + json);
+                logger.info(k + ": " + json);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

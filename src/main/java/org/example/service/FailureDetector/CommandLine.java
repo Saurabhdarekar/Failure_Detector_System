@@ -16,73 +16,67 @@ public class CommandLine implements Runnable {
     private ConcurrentHashMap<String, Integer> map;
     private String threadName;
 
-    // Constructor to initialize the task with a map and a thread name
-    public CommandLine(ConcurrentHashMap<String, Integer> map, String threadName) {
-        this.map = map;
-        this.threadName = threadName;
-    }
 
     @Override
     public void run() {
         // Each thread updates the map with its own name as the key
+        while(true) {
+            System.out.println("Enter The command");
+            Scanner scanner = new Scanner(System.in);
+            String command = scanner.nextLine();
+            Dissemination d = new Dissemination();
+            try {
+                if (command.startsWith("grep_log")) {
+                    int index = command.indexOf("grep_log");
+                    if (index != -1) {
+                        String grepCommand = command.substring(index + "grep_log".length()).trim();
+                        Client c = new Client();
+                        c.runClient(grepCommand);
+                    }
+                } else {
+                    switch (command) {
+                        case "list_mem":
+                            System.out.println("Membership List");
+                            MembershipList.printMembersId();
+                            break;
 
-        System.out.println("Enter The command");
-        Scanner scanner = new Scanner(System.in);
-        String command = scanner.nextLine();
-        Dissemination d = new Dissemination();
-        try {
-            if(command.startsWith("grep_log")) {
-                int index = command.indexOf("grep_log");
-                if (index != -1) {
-                    String grepCommand = command.substring(index + "grep_log".length()).trim();
-                    Client c = new Client();
-                    c.runClient(grepCommand);
+                        case "list_self":
+                            System.out.println("Node self id");
+                            String id = FDProperties.getFDProperties().get("machineIp") + String.valueOf(FDProperties.getFDProperties().get("machinePort"))
+                                    + FDProperties.getFDProperties().get("versionNo");
+                            System.out.println(id);
+                            break;
+                        case "join":
+                            System.out.println("Joining Node");
+                            Server s = new Server();
+                            s.startServer();
+                            break;
+                        case "leave":
+                            d.sendLeaveMessage();
+                            break;
+
+                        case "enable_sus":
+
+                        case "disable_sus":
+                            d.sendSwitch();
+                            break;
+
+                        case "status_sus":
+                            System.out.println(FDProperties.getFDProperties().get("isSuspicionModeOn"));
+                            break;
+
+                        default:
+                            System.out.println("Invalid command");
+                            logger.error("Invalid command");
+
+
+                    }
                 }
-            }else {
-                switch (command) {
-                    case "list_mem":
-                        System.out.println("Membership List");
-                        MembershipList.printMembers();
-                        break;
-
-                    case "list_self":
-                        System.out.println("Node self id");
-                        String id = String.valueOf(FDProperties.getFDProperties().get("machineIp"))+String.valueOf(FDProperties.getFDProperties().get("machinePort"))
-                                + String.valueOf(FDProperties.getFDProperties().get("versionNo"));
-                        System.out.println(id);
-                        break;
-                    case "join":
-                        System.out.println("Joining Node");
-                        Server s = new Server();
-                        s.startServer();
-                        break;
-                    case "leave":
-                        d.sendLeaveMessage();
-                        break;
-
-                    case "enable_sus":
-
-                    case "disable_sus":
-                        d.sendSwitch();
-                        break;
-
-                    case "status_sus":
-                        System.out.println(FDProperties.getFDProperties().get("isSuspicionModeOn"));
-                        break;
-
-                    default:
-                        System.out.println("Invalid command");
-                        logger.error("Invalid command");
 
 
-                }
+            } catch (Exception e) {
+                logger.error("Error in Commandline while exectuing  command {}  Error  : {}", command, e);
             }
-
-
-        } catch (Exception e) {
-            logger.error("Error in Commandline while exectuing  command {}  Error  : {}", command, e);
         }
-
-        MembershipList.printMembers();
     }
 }
