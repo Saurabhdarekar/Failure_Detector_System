@@ -137,6 +137,24 @@ public class Dissemination {
         }
     }
 
+    public void sendLeaveMessage() {
+        try {
+            String  memberName = String.valueOf(FDProperties.getFDProperties().get("machineName"));
+            logger.info("Node is Leaving : " + memberName);
+            Map<String, Object> removeContent = new HashMap<>();
+            removeContent.put("messageName", "failed");
+            removeContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
+            removeContent.put("senderPort", FDProperties.getFDProperties().get("machinePort"));
+            removeContent.put("msgId", FDProperties.generateRandomMessageId());
+            removeContent.put("memberName", FDProperties.getFDProperties().get("machineName"));
+            PingSender removeNode = new PingSender();
+            removeNode.multicast("failed", removeContent);
+            MembershipList.removeMember(memberName);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendConfirmMessage(Member removeMember) {
         try {
             logger.info("Node was in Suspect state and since there is no Alive message, Node Failed : " + removeMember.getName());
@@ -154,5 +172,20 @@ public class Dissemination {
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String sendSwitch(){
+        try{
+            Map<String, Object> messageContent = new HashMap<>();
+            messageContent.put("messageName", "switch");
+            messageContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
+            messageContent.put("senderPort", FDProperties.getFDProperties().get("machinePort"));
+            messageContent.put("msgId", FDProperties.generateRandomMessageId());
+            PingSender pingSender = new PingSender();
+            pingSender.multicast("switch", messageContent);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Successful";
     }
 }

@@ -11,10 +11,10 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+        logger.debug("---->Starting Main");
         FDProperties.initialize();
         FDProperties.printFDProperties();
-        Server s = new Server();
-        s.startServer();
+
         System.out.println("Server started");
     }
 }

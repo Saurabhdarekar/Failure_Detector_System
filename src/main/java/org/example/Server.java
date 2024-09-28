@@ -4,6 +4,7 @@ import org.example.entities.FDProperties;
 import org.example.entities.Member;
 import org.example.service.FailureDetector.Dissemination;
 import org.example.service.FailureDetector.FDServer;
+import org.example.service.Log.LogServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +17,8 @@ public class Server {
 
     public void startServer(){
         // Start the Log Server
-//        LogServer logServer = new LogServer();
-//        logServer.start();
+        LogServer logServer = new LogServer();
+        logServer.start();
 
         //Below code will start the Dissemination Service
         Dissemination dissemination = new Dissemination();
