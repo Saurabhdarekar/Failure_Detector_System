@@ -157,7 +157,7 @@ public class PingReceiver extends Thread{
                     break;
                 case "ping":
                     try {
-//                        System.out.println("Ping received");
+                        logger.info("Ping received from : " + packet.getPort());
                         Map<String, Object> messageContent = new HashMap<>();
                         messageContent.put("messageName", "pingAck");
                         messageContent.put("senderName", FDProperties.getFDProperties().get("machineName"));

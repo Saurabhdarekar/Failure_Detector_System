@@ -185,7 +185,8 @@ public class FDServer {
                     } else if (response.equals("Unsuccessful")) {
                         if ((Boolean) FDProperties.getFDProperties().get("isSuspicionModeOn")) {
                             //Put the node in the suspect mode and call the disseminator to spread the suspect message
-                            dissemination.sendSuspectMessage(member);
+                            if(!member.getStatus().equals("Suspected"))
+                                dissemination.sendSuspectMessage(member);
                         } else {
                             //Removing the node from the list
                             dissemination.sendFailedMessage(member);

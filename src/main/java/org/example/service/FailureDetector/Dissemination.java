@@ -112,7 +112,6 @@ public class Dissemination {
 
     public void sendFailedMessage(Member removeMember) {
         try {
-            MembershipList.removeMember(removeMember.getName());
             logger.info("Node has Failed : " + removeMember.getName());
             Map<String, Object> removeContent = new HashMap<>();
             removeContent.put("messageName", "failed");
@@ -124,6 +123,7 @@ public class Dissemination {
             removeContent.put("memberPort", removeMember.getPort());
             PingSender removeNode = new PingSender();
             removeNode.multicast("failed", removeContent);
+            MembershipList.removeMember(removeMember.getName());
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -131,7 +131,6 @@ public class Dissemination {
 
     public void sendConfirmMessage(Member removeMember) {
         try {
-            MembershipList.removeMember(removeMember.getName());
             logger.info("Node was in Suspect state and since there is no Alive message, Node Failed : " + removeMember.getName());
             Map<String, Object> removeContent = new HashMap<>();
             removeContent.put("messageName", "confirm");
@@ -143,6 +142,7 @@ public class Dissemination {
             removeContent.put("memberPort", removeMember.getPort());
             PingSender removeNode = new PingSender();
             removeNode.multicast("confirm", removeContent);
+            MembershipList.removeMember(removeMember.getName());
         }catch (Exception e) {
             e.printStackTrace();
         }
