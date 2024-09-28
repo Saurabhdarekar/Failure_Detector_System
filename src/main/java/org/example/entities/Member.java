@@ -10,14 +10,16 @@ public class Member {
     String versionNo;
     String status;
     String dateTime;
+    String incarnationNo;
 
-    public Member(String name, String ipAddress, String port, String versionNo, String status, String dateTime) {
+    public Member(String name, String ipAddress, String port, String versionNo, String status, String dateTime, String incarnationNo) {
         this.name = name;
         this.ipAddress = ipAddress;
         this.port = port;
         this.versionNo = versionNo;
         this.status = status;
         this.dateTime = dateTime;
+        this.incarnationNo = incarnationNo;
     }
 
     public static String getLocalDateTime(){
@@ -77,4 +79,14 @@ public class Member {
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
+
+
+    public String getIncarnationNo() {
+        return incarnationNo;
+    }
+
+    public void setIncarnationNo(String incarnationNo) {
+        this.incarnationNo = incarnationNo;
+    }
+
 }

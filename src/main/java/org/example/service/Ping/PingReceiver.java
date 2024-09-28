@@ -58,9 +58,10 @@ public class PingReceiver extends Thread{
                                 new Member((String) message.getMessageContent().get("senderName"),
                                         (String) message.getMessageContent().get("senderIp"),
                                         ((String) message.getMessageContent().get("senderPort")),
-                                        (String) message.getMessageContent().get("version"),
+                                        (String) message.getMessageContent().get("versionNo"),
                                         "alive",
-                                        Member.getLocalDateTime())
+                                        Member.getLocalDateTime(),
+                                        (String) message.getMessageContent().get("incarnationNo"))
                         );
                         MembershipList.printMembers();
                         logger.info("Receiving membership list");
@@ -76,7 +77,7 @@ public class PingReceiver extends Thread{
                                 Map<String, String> map = objectMapper.readValue(t, Map.class);
                                 if(!map.get("name").equals(FDProperties.getFDProperties().get("machineName"))) {
                                     MembershipList.addMember(
-                                            new Member(map.get("name"), map.get("ipAddress"), map.get("port"), map.get("versionNo"), map.get("status"), map.get("dateTime"))
+                                            new Member(map.get("name"), map.get("ipAddress"), map.get("port"), map.get("versionNo"), map.get("status"), map.get("dateTime"), map.get("incarnationNo"))
                                     );
                                 }
                             } catch (IOException e) {
@@ -103,9 +104,10 @@ public class PingReceiver extends Thread{
                                         new Member((String) message.getMessageContent().get("senderName"),
                                                 (String) message.getMessageContent().get("senderIp"),
                                                 ((String) message.getMessageContent().get("senderPort")),
-                                                (String) message.getMessageContent().get("version"),
+                                                (String) message.getMessageContent().get("versionNo"),
                                                 "alive",
-                                                Member.getLocalDateTime())
+                                                Member.getLocalDateTime(),
+                                                (String) message.getMessageContent().get("incarnationNo"))
                                 );
                                 MembershipList.printMembers();
                             } catch (IOException e) {
@@ -120,6 +122,8 @@ public class PingReceiver extends Thread{
                                 messageContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
                                 messageContent.put("senderPort", String.valueOf(FDProperties.getFDProperties().get("machinePort")));
                                 messageContent.put("msgId", FDProperties.generateRandomMessageId());
+                                messageContent.put("versionNo", String.valueOf(FDProperties.getFDProperties().get("versionNo")));
+                                messageContent.put("incarnationNo", String.valueOf(FDProperties.getFDProperties().get("incarnationNo")));
                                 messageContent.put("isIntroducing", "false");
                                 try {
                                     Message introduceBackMessage = new Message("alive",
@@ -145,9 +149,10 @@ public class PingReceiver extends Thread{
                                     new Member((String) message.getMessageContent().get("senderName"),
                                             (String) message.getMessageContent().get("senderIp"),
                                             ((String) message.getMessageContent().get("senderPort")),
-                                            (String) message.getMessageContent().get("version"),
+                                            (String) message.getMessageContent().get("versionNo"),
                                             "alive",
-                                            Member.getLocalDateTime())
+                                            Member.getLocalDateTime(),
+                                            (String) message.getMessageContent().get("incarnationNo"))
                             );
                             MembershipList.printMembers();
                         }
@@ -245,6 +250,8 @@ public class PingReceiver extends Thread{
                         //TODO add a piece of code which will send alive multicast if the suspect node is itself
                         if(message.getMessageContent().get("memberName").equals(FDProperties.getFDProperties().get("machineName"))){
                             Dissemination dissemination = new Dissemination();
+                            int inc = Integer.parseInt((String) FDProperties.getFDProperties().get("incarnationNo"));
+                            FDProperties.getFDProperties().put("incarnationNo", String.valueOf(inc+1));
                             dissemination.sendSelfAliveMessage();
                         }else {
                             if(!MembershipList.members.get((String) message.getMessageContent().get("memberName")).getStatus().equals("Suspected")) {
@@ -270,6 +277,18 @@ public class PingReceiver extends Thread{
                         }
                     }catch(Exception e){
                         logger.error(e.getMessage());
+                    }
+                    break;
+                case "switch" :
+                    if((Boolean) FDProperties.getFDProperties().get("isSuspicionModeOn")) {
+                        logger.info("Switching to Basic Swim");
+                        FDProperties.getFDProperties().put("isSuspicionModeOn", false);
+                        FDProperties.getFDProperties().put("ackWaitPeriod", FDProperties.getFDProperties().get("basicSwimWaitPeriod"));
+                    }
+                    else {
+                        logger.info("Switching to Suspicion Mode");
+                        FDProperties.getFDProperties().put("isSuspicionModeOn", true);
+                        FDProperties.getFDProperties().put("ackWaitPeriod", FDProperties.getFDProperties().get("suspicionSwimWaitPeriod"));
                     }
                     break;
                 default:

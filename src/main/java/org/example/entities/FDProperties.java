@@ -22,16 +22,21 @@ public class FDProperties {
         }
         fDProperties.put("isIntroducer",Boolean.parseBoolean(prop.getProperty("isIntroducer")));
         fDProperties.put("protocolPeriod", Integer.parseInt(prop.getProperty("protocolPeriod")));
-        fDProperties.put("ackWaitPeriod", Integer.parseInt(prop.getProperty("ackWaitPeriod")));
         fDProperties.put("suspicionProtocolPeriod", Integer.parseInt(prop.getProperty("suspicionProtocolPeriod")));
-        fDProperties.put("noOfProbingNodes", Integer.parseInt(prop.getProperty("noOfProbingNodes")));
         fDProperties.put("isSuspicionModeOn", Boolean.parseBoolean(prop.getProperty("isSuspicionModeOn")));
+        fDProperties.put("suspicionSwimWaitPeriod", Integer.parseInt(prop.getProperty("suspicionSwimWaitPeriod")));
+        fDProperties.put("basicSwimWaitPeriod", Integer.parseInt(prop.getProperty("basicSwimWaitPeriod")));
         fDProperties.put("machineIp", prop.getProperty("machineIp"));
         fDProperties.put("machinePort", Integer.parseInt(prop.getProperty("machinePort")));
-        fDProperties.put("machineReceivingPort", Integer.parseInt(prop.getProperty("machineReceivingPort")));
         fDProperties.put("introducerAddress", prop.getProperty("introducerAddress"));
         fDProperties.put("introducerPort", prop.getProperty("introducerPort"));
         fDProperties.put("machineName", prop.getProperty("machineName"));
+        fDProperties.put("versionNo", 0);
+        fDProperties.put("incarnationNo", prop.getProperty("incarnationNo"));
+        if((Boolean) fDProperties.get("isSuspicionModeOn"))
+            fDProperties.put("ackWaitPeriod", fDProperties.get("suspicionSwimWaitPeriod"));
+        else
+            fDProperties.put("ackWaitPeriod", fDProperties.get("basicSwimWaitPeriod"));
     }
 
     public static ConcurrentHashMap<String, Object> getFDProperties(){

@@ -61,6 +61,8 @@ public class Dissemination {
             messageContent.put("memberName", FDProperties.getFDProperties().get("machineName"));
             messageContent.put("memberIp", FDProperties.getFDProperties().get("machineIp"));
             messageContent.put("memberPort", FDProperties.getFDProperties().get("machinePort"));
+            messageContent.put("versionNo", String.valueOf(FDProperties.getFDProperties().get("versionNo")));
+            messageContent.put("incarnationNo", String.valueOf(FDProperties.getFDProperties().get("incarnationNo")));
             PingSender pingSender = new PingSender();
             pingSender.multicast("alive", messageContent);
         }catch (Exception e) {
@@ -76,6 +78,9 @@ public class Dissemination {
         messageContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
         messageContent.put("senderPort", String.valueOf(FDProperties.getFDProperties().get("machinePort")));
         messageContent.put("msgId", FDProperties.generateRandomMessageId());
+        FDProperties.getFDProperties().put("versionNo", Member.getLocalDateTime());
+        messageContent.put("versionNo", String.valueOf(FDProperties.getFDProperties().get("versionNo")));
+        messageContent.put("incarnationNo", String.valueOf(FDProperties.getFDProperties().get("incarnationNo")));
         messageContent.put("isIntroducing", "true");
         try {
             logger.info("Sending alive message to introducer");
@@ -87,6 +92,7 @@ public class Dissemination {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        FDProperties.getFDProperties().put("versionNo", Member.getLocalDateTime());
     }
 
     public void sendAliveMessage(Member member) {
@@ -103,6 +109,8 @@ public class Dissemination {
             messageContent.put("memberName", member.getName());
             messageContent.put("memberIp", member.getIpAddress());
             messageContent.put("memberPort", member.getPort());
+            messageContent.put("versionNo", String.valueOf(FDProperties.getFDProperties().get("versionNo")));
+            messageContent.put("incarnationNo", String.valueOf(FDProperties.getFDProperties().get("incarnationNo")));
             PingSender pingSender = new PingSender();
             pingSender.multicast("alive", messageContent);
         }catch (Exception e) {

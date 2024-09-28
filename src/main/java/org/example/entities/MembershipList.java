@@ -31,11 +31,25 @@ public class MembershipList {
     }
 
     public static void printMembers() {
+//        System.out.println("Printing members at :" + FDProperties.getFDProperties().get("machineName"));
         members.forEach((k, v) -> {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 String json = mapper.writeValueAsString(v);
                 System.out.println(k + ": " + json);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public static void printMembersId() {
+        System.out.println("Printing members at :" + FDProperties.getFDProperties().get("machineName"));
+        members.forEach((k, v) -> {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                String json = mapper.writeValueAsString(v);
+                System.out.println(v.getName() + v.getIpAddress() + v.getPort() + v.getVersionNo());
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -82,7 +96,8 @@ public class MembershipList {
                             member.getPort(),
                             member.getVersionNo(),
                             member.getStatus(),
-                            member.getDateTime());
+                            member.getDateTime(),
+                            member.getIncarnationNo());
                     memberList.add(newMember);
                 }
             }

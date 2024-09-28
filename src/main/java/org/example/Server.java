@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.entities.FDProperties;
+import org.example.entities.Member;
 import org.example.service.FailureDetector.Dissemination;
 import org.example.service.FailureDetector.FDServer;
 import org.slf4j.Logger;
@@ -25,6 +26,8 @@ public class Server {
         //TODO code to introduce itself
         if(!((Boolean) FDProperties.getFDProperties().get("isIntroducer"))) {
             dissemination.sendAliveMessageToIntroducer();
+        }else {
+            FDProperties.getFDProperties().put("versionNo", Member.getLocalDateTime());
         }
 
         /* WE can keep pinging the nodes in a loop so that we will get the responses from all healthy nodes quickly and then wait

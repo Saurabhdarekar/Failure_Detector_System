@@ -147,6 +147,7 @@ public class FDServer {
         try {
             while (MembershipList.isLast()) {
                 LocalDateTime startTime = LocalDateTime.now();
+                //Go through the list and is we don't receive an ack for any suspected node in our list then mark it as failed and send a multicast.
                 for (Member member : MembershipList.getSuspectedMembers()) {
                     Duration duration = Duration.between(Member.getTimeFromString(member.getDateTime()),
                             Member.getTimeFromString(Member.getLocalDateTime()));
@@ -175,10 +176,9 @@ public class FDServer {
                     pingSender.start();
                     pingSender.join();
                     String response = pingSender.getResult();
-//                    logger.debug("response is" + response);
                     if (response.equals("Successful")) {
                         if ((Boolean) FDProperties.getFDProperties().get("isSuspicionModeOn")) {
-                            //TODO if the node has been marked as Suspected then ask the Disseminator to spread ALive message
+                            //if the node has been marked as Suspected then ask the Disseminator to spread Alive message
                             if (MembershipList.members.get(member.getName()).getStatus().equals("Suspected"))
                                 dissemination.sendAliveMessage(member);
                         }
@@ -195,7 +195,6 @@ public class FDServer {
                 } catch (UnknownHostException | InterruptedException e) {
                     e.printStackTrace();
                 }
-                //TODO go through the list and is we don't receive an ack for any suspected node in our list then mark it as failed and send a multicast.
                 //if the total period is greater than 1sec then don't wait, if not then wait for remaining period
                 long time = Duration.between(LocalDateTime.now(), startTime).toMillis();
                 if (time < (int)FDProperties.getFDProperties().get("protocolPeriod")) {
