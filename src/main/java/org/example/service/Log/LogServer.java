@@ -1,7 +1,6 @@
-package org.example.service;
+package org.example.service.Log;
 
 import org.example.config.AppConfig;
-import org.example.service.Log.GrepExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

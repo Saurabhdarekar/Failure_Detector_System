@@ -9,15 +9,7 @@ public class Member {
     String port;
     String versionNo;
     String status;
-
-
     String dateTime;
-
-    public Member(String ipAddress, String port, String versionNo) {
-        this.ipAddress = ipAddress;
-        this.port = port;
-        this.versionNo = versionNo;
-    }
 
     public Member(String name, String ipAddress, String port, String versionNo, String status, String dateTime) {
         this.name = name;
@@ -30,8 +22,12 @@ public class Member {
 
     public static String getLocalDateTime(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:nnnn");
-        LocalDateTime dateTime = java.time.LocalDateTime.now();
-        return dateTime.format(formatter);
+        return LocalDateTime.now().format(formatter);
+    }
+
+    public static LocalDateTime getTimeFromString(String dateTimeString){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:nnnn");
+        return LocalDateTime.parse(dateTimeString, formatter);
     }
 
     public String getName() {

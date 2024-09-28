@@ -2,6 +2,9 @@ package org.example.entities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +17,7 @@ public class MembershipList {
     public static ConcurrentHashMap<String, Member> members = new ConcurrentHashMap<>();
     public static ArrayList<String> memberNames = new ArrayList<>();
     public static int pointer;
+    private static final Logger logger = LoggerFactory.getLogger(MembershipList.class);
 
     public static void addMember(Member member) {
         members.put(member.getName(), member);
@@ -37,6 +41,16 @@ public class MembershipList {
         });
     }
 
+    public static List<Member> getSuspectedMembers() {
+        List<Member> suspectedMembers = new ArrayList<>();
+        members.forEach((k, v) -> {
+            if(v.getStatus().equals("Suspected")) {
+                suspectedMembers.add(v);
+            }
+        });
+        return suspectedMembers;
+    }
+
     public static void generateRandomList() {
         pointer = 0;
         Collections.shuffle(memberNames);
@@ -49,7 +63,7 @@ public class MembershipList {
     }
 
     public static Boolean isLast(){
-        System.out.println(pointer + " " + memberNames.size() + " " + members.size());
+//        logger.debug(pointer + " " + memberNames.size() + " " + members.size());
         return pointer < memberNames.size();
     }
 
@@ -72,7 +86,7 @@ public class MembershipList {
                 }
             }
         } else {
-            System.out.println("Map is empty.");
+            logger.info("Map is empty.");
         }
         return memberList;
     }

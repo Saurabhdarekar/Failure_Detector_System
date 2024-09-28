@@ -5,12 +5,17 @@ import org.example.entities.FDProperties;
 import org.example.entities.Member;
 import org.example.entities.MembershipList;
 import org.example.entities.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PingSender extends Thread {
+
+    private static final Logger logger = LoggerFactory.getLogger(PingSender.class);
 
     private volatile String result;
     private volatile int waitPeriod;
@@ -32,18 +37,18 @@ public class PingSender extends Thread {
             socket.setSoTimeout(waitPeriod);
             ObjectMapper objectMapper = new ObjectMapper();
             String s = objectMapper.writeValueAsString(message.getMessageContent());
-            System.out.println(s);
+//            System.out.println(s);
             byte[] buf = s.getBytes();
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
             socket.send(packet);
-            System.out.println("Ping sent to " + message.getIpAddress() + ":" + message.getPort());
+//            System.out.println("Ping sent to " + message.getIpAddress() + ":" + message.getPort());
             byte[] receivingBuf = new byte[16384];
             packet = new DatagramPacket(receivingBuf, receivingBuf.length);
             socket.receive(packet);
             String received = new String(
                     packet.getData(), 0, packet.getLength());
-            System.out.println(received);
+//            System.out.println(received);
             InetAddress address = packet.getAddress();
             int port = packet.getPort();
             Message replyMessage = Message.process(address, String.valueOf(port), received);
@@ -114,7 +119,7 @@ public class PingSender extends Thread {
         return "Unsuccessful";
     }
 
-    public String sendMessage(Message message, String json) {
+    public String sendMembershipList(Message message, String json) {
         try {
             DatagramSocket socket = new DatagramSocket();
             //This node will wait for below timeout for the target node to send the ack
@@ -133,13 +138,13 @@ public class PingSender extends Thread {
         return "Unsuccessful";
     }
 
-    public String multicast(Message multicastMessage) throws IOException {
+    public String multicast(String messageName, Map<String, Object> messageContent) throws IOException {
         ConcurrentHashMap<String, Member> copiedMap = new ConcurrentHashMap<>(MembershipList.members);
         copiedMap.forEach((key, member) -> {
             Message message = null;
             try {
-                message = new Message(multicastMessage.getMessageName(), member.getIpAddress(),member.getPort(),
-                        multicastMessage.getMessageContent());
+                message = new Message(messageName, member.getIpAddress(),member.getPort(),
+                        messageContent);
             } catch (UnknownHostException e) {
                 throw new RuntimeException(e);
             }
@@ -147,6 +152,7 @@ public class PingSender extends Thread {
         });
         return "Successful";
     }
+
 //    public String sendEcho(String msg) throws IOException {
 //        buf = msg.getBytes();
 //        DatagramPacket packet

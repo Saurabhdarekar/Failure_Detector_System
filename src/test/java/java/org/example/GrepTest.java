@@ -1,8 +1,7 @@
 package java.org.example;
 
-import org.example.Server;
 import org.example.service.Log.ClientComponent;
-import org.example.service.LogServer;
+import org.example.service.Log.LogServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

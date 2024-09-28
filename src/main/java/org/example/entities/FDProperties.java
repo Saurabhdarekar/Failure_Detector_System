@@ -25,7 +25,7 @@ public class FDProperties {
         fDProperties.put("ackWaitPeriod", Integer.parseInt(prop.getProperty("ackWaitPeriod")));
         fDProperties.put("suspicionProtocolPeriod", Integer.parseInt(prop.getProperty("suspicionProtocolPeriod")));
         fDProperties.put("noOfProbingNodes", Integer.parseInt(prop.getProperty("noOfProbingNodes")));
-        fDProperties.put("isSuspicionModeOn", Boolean.parseBoolean(prop.getProperty("suspicionModeOn")));
+        fDProperties.put("isSuspicionModeOn", Boolean.parseBoolean(prop.getProperty("isSuspicionModeOn")));
         fDProperties.put("machineIp", prop.getProperty("machineIp"));
         fDProperties.put("machinePort", Integer.parseInt(prop.getProperty("machinePort")));
         fDProperties.put("machineReceivingPort", Integer.parseInt(prop.getProperty("machineReceivingPort")));
