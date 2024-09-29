@@ -176,6 +176,13 @@ public class FDServer extends Thread {
                         pingSender.start();
                         pingSender.join();
                         String response = pingSender.getResult();
+
+                        Random rand = new Random();
+                        if (rand.nextDouble() < (double)FDProperties.getFDProperties().get("dropProbability")) {
+                            response = "Unsuccessful";
+                            return;  // Drop the message
+                        }
+
                         if (response.equals("Successful")) {
                             if ((Boolean) FDProperties.getFDProperties().get("isSuspicionModeOn")) {
                                 //if the node has been marked as Suspected then ask the Disseminator to spread Alive message

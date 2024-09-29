@@ -33,6 +33,7 @@ public class FDProperties {
         fDProperties.put("machineName", prop.getProperty("machineName"));
         fDProperties.put("versionNo", 0);
         fDProperties.put("incarnationNo", prop.getProperty("incarnationNo"));
+        fDProperties.put("dropProbability", Double.parseDouble(prop.getProperty("dropProbability")));
         if((Boolean) fDProperties.get("isSuspicionModeOn"))
             fDProperties.put("ackWaitPeriod", fDProperties.get("suspicionSwimWaitPeriod"));
         else
