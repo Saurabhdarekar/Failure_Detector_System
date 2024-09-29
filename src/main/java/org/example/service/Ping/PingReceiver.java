@@ -142,7 +142,7 @@ public class PingReceiver extends Thread{
                                 }
                             }
                         } else {
-                            System.out.println("Alive message received : " + FDProperties.getFDProperties().get("machineName"));
+                            System.out.println("Alive message received : " + message.getMessageContent().get("senderName"));
                             if (message.getMessageContent().get("senderName").equals(FDProperties.getFDProperties().get("machineName")))
                                 break;
                             MembershipList.addMember(

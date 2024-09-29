@@ -180,7 +180,6 @@ public class FDServer extends Thread {
                         Random rand = new Random();
                         if (rand.nextDouble() < (double)FDProperties.getFDProperties().get("dropProbability")) {
                             response = "Unsuccessful";
-                            return;  // Drop the message
                         }
 
                         if (response.equals("Successful")) {
