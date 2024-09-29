@@ -49,7 +49,7 @@ public class MembershipList {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 String json = mapper.writeValueAsString(v);
-                System.out.println(v.getName() + v.getIpAddress() + v.getPort() + v.getVersionNo());
+                System.out.println(" " +  v.getName() + v.getIpAddress() + v.getPort() + v.getVersionNo() + " " + v.getIncarnationNo());
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
