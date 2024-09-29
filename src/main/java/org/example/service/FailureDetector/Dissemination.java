@@ -34,7 +34,7 @@ public class Dissemination {
             member.setDateTime(Member.getLocalDateTime());
             //TODO add the incarnation number
             MembershipList.members.put(member.getName(), member);
-            System.out.println("Node is Suspected : "+ member.getName());
+            System.out.println("Node is Suspected : "+ member.getName() + "__" + Member.getLocalDateTime());
             Map<String, Object> messageContent = new HashMap<>();
             messageContent.put("messageName", "suspect");
             messageContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
@@ -52,7 +52,7 @@ public class Dissemination {
 
     public void sendSelfAliveMessage() {
         try {
-            System.out.println("Setting self alive");
+            System.out.println("Setting self alive"  + "__" + Member.getLocalDateTime());
             logger.info("Setting self alive");
             Map<String, Object> messageContent = new HashMap<>();
             messageContent.put("messageName", "alive");
@@ -100,7 +100,7 @@ public class Dissemination {
             member.setStatus("Alive");
             member.setDateTime(Member.getLocalDateTime());
             MembershipList.members.put(member.getName(), member);
-            System.out.println("Node is Alive : "+ member.getName());
+            System.out.println("Node is Alive : "+ member.getName() + "__" + Member.getLocalDateTime());
             logger.info("Node is Alive : "+ member.getName());
             Map<String, Object> messageContent = new HashMap<>();
             messageContent.put("messageName", "alive");
@@ -124,7 +124,7 @@ public class Dissemination {
     public void sendFailedMessage(Member removeMember) {
         try {
             System.out.println("Node has Failed : " + removeMember.getName());
-            logger.info("Node has Failed : " + removeMember.getName());
+            logger.info("Node has Failed : " + removeMember.getName() + "__" + Member.getLocalDateTime());
             Map<String, Object> removeContent = new HashMap<>();
             removeContent.put("messageName", "failed");
             removeContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
@@ -144,7 +144,7 @@ public class Dissemination {
     public void sendLeaveMessage() {
         try {
             String  memberName = String.valueOf(FDProperties.getFDProperties().get("machineName"));
-            System.out.println("Node is Leaving : " + memberName);
+            System.out.println("Node is Leaving : " + memberName + "__" + Member.getLocalDateTime());
             logger.info("Node is Leaving : " + memberName);
             Map<String, Object> removeContent = new HashMap<>();
             removeContent.put("messageName", "failed");
@@ -162,7 +162,7 @@ public class Dissemination {
 
     public void sendConfirmMessage(Member removeMember) {
         try {
-            System.out.println("Node was in Suspect state and since there is no Alive message, Node Failed : " + removeMember.getName());
+            System.out.println("Node was in Suspect state and since there is no Alive message, Node Failed : " + removeMember.getName() + "__" + Member.getLocalDateTime());
             logger.info("Node was in Suspect state and since there is no Alive message, Node Failed : " + removeMember.getName());
             Map<String, Object> removeContent = new HashMap<>();
             removeContent.put("messageName", "confirm");

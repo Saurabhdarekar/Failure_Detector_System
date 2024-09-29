@@ -48,12 +48,12 @@ public class MembershipList {
     }
 
     public static void printMembersId() {
-        System.out.println("Printing members at :" + FDProperties.getFDProperties().get("machineName"));
+        System.out.println("Printing members at : " + FDProperties.getFDProperties().get("machineName"));
         members.forEach((k, v) -> {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 String json = mapper.writeValueAsString(v);
-                System.out.println(" " +  v.getName() + v.getIpAddress() + v.getPort() + v.getVersionNo() + " " + v.getIncarnationNo());
+                System.out.println(" " +  v.getName() + "_" + v.getIpAddress() + "_" + v.getPort() + "_" + v.getVersionNo() + "_" + v.getIncarnationNo());
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

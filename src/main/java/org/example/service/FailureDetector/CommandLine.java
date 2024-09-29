@@ -43,7 +43,7 @@ public class CommandLine implements Runnable {
 
                         case "list_self":
                             System.out.println("Node self id");
-                            String id = FDProperties.getFDProperties().get("machineIp") + String.valueOf(FDProperties.getFDProperties().get("machinePort"))
+                            String id = FDProperties.getFDProperties().get("machineIp") + "_" + String.valueOf(FDProperties.getFDProperties().get("machinePort")) + "_"
                                     + FDProperties.getFDProperties().get("versionNo");
                             System.out.println(id);
                             break;

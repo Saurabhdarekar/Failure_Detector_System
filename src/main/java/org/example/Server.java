@@ -49,6 +49,5 @@ public class Server{
             task.start();
 //        executor.scheduleAtFixedRate(task.send(), 0, (int) FDProperties.getFDProperties().get("protocolPeriod"), TimeUnit.SECONDS);
 //        }
-        System.out.println("hi");
     }
 }
