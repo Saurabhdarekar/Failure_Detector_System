@@ -254,6 +254,10 @@ public class PingReceiver extends Thread{
                     try {
                         if(!message.getMessageContent().get("memberName").equals(FDProperties.getFDProperties().get("machineName"))) {
                             MembershipList.removeMember((String) message.getMessageContent().get("memberName"));
+                        }else{
+                            logger.info("The Node itself has been removed from the group");
+                            MembershipList.members.clear();
+                            MembershipList.memberNames.clear();
                         }
                     }catch (Exception e) {
                         logger.error(e.getMessage());
@@ -292,6 +296,8 @@ public class PingReceiver extends Thread{
                             MembershipList.removeMember((String) message.getMessageContent().get("memberName"));
                         }else{
                             logger.info("The Node itself has been removed from the group");
+                            MembershipList.members.clear();
+                            MembershipList.memberNames.clear();
                         }
                     }catch(Exception e){
                         logger.error(e.getMessage());
