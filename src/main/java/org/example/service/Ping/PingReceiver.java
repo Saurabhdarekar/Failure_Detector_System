@@ -153,7 +153,7 @@ public class PingReceiver extends Thread{
                                             (String) message.getMessageContent().get("versionNo"),
                                             "alive",
                                             Member.getLocalDateTime(),
-                                            (String) message.getMessageContent().get("incarnationNo"))
+                                            String.valueOf(message.getMessageContent().get("incarnationNo")))
                             );
                             MembershipList.printMembers();
                         }
