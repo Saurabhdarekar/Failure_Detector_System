@@ -172,7 +172,7 @@ public class PingReceiver extends Thread{
                     break;
                 case "ping":
                     try {
-                        logger.info("Ping received from : " + packet.getPort());
+                        logger.info("Ping received from : " + packet.getAddress());
                         Map<String, Object> messageContent = new HashMap<>();
                         messageContent.put("messageName", "pingAck");
                         messageContent.put("senderName", FDProperties.getFDProperties().get("machineName"));
@@ -244,7 +244,8 @@ public class PingReceiver extends Thread{
                     }
                     break;
                 case "failed" :
-                    System.out.println("Failed message received");
+                    System.out.println("Failed message received" + message.getMessageContent().get("memberName"));
+                    logger.info("Failed message received" + message.getMessageContent().get("memberName"));
                     try {
                         if(!message.getMessageContent().get("memberName").equals(FDProperties.getFDProperties().get("machineName"))) {
                             MembershipList.removeMember((String) message.getMessageContent().get("memberName"));
@@ -254,7 +255,8 @@ public class PingReceiver extends Thread{
                     }
                     break;
                 case "suspect" :
-                    System.out.println("Suspect message received");
+                    System.out.println("Suspect message received " + message.getMessageContent().get("memberName"));
+                    logger.info("Suspect message received " + message.getMessageContent().get("memberName"));
                     try{
                         //TODO add a piece of code to set the status of a member to suspect
                         //TODO add a piece of code which will send alive multicast if the suspect node is itself
@@ -277,7 +279,8 @@ public class PingReceiver extends Thread{
                     }
                     break;
                 case "confirm" :
-                    System.out.println("Confirm message received");
+                    System.out.println("Confirm message received " + message.getMessageContent().get("memberName") );
+                    logger.info("Confirm message received " + message.getMessageContent().get("memberName") );
                     try {
                         //TODO add a piece of code that will remove the member from the list
                         if(!message.getMessageContent().get("memberName").equals(FDProperties.getFDProperties().get("machineName"))) {

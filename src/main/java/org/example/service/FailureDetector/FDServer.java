@@ -185,6 +185,7 @@ public class FDServer extends Thread {
                         if (response.equals("Successful")) {
                             if ((Boolean) FDProperties.getFDProperties().get("isSuspicionModeOn")) {
                                 //if the node has been marked as Suspected then ask the Disseminator to spread Alive message
+                                logger.info("Member is succescfull but in " + MembershipList.members.get(member.getName()).getStatus());
                                 if (MembershipList.members.get(member.getName()).getStatus().equals("Suspected"))
                                     dissemination.sendAliveMessage(member);
                             }

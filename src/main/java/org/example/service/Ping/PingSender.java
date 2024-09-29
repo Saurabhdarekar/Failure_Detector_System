@@ -104,6 +104,7 @@ public class PingSender extends Thread {
         return "Unsuccessful";
     }
 
+    //TODO needs to improve this one
     public String multicast(String messageName, Map<String, Object> messageContent) throws IOException {
         ConcurrentHashMap<String, Member> copiedMap = new ConcurrentHashMap<>(MembershipList.members);
         copiedMap.forEach((key, member) -> {

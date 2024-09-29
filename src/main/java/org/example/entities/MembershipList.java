@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,12 +19,14 @@ public class MembershipList {
 
     public static ConcurrentHashMap<String, Member> members = new ConcurrentHashMap<>();
     public static List<String> memberNames = new CopyOnWriteArrayList<>();
+//    public static Set<String> memberNames = new ConcurrentSkipListSet<>();;
     public static int pointer;
     private static final Logger logger = LoggerFactory.getLogger(MembershipList.class);
 
     public static void addMember(Member member) {
         members.put(member.getName(), member);
-        memberNames.add(member.getName());
+        if(!memberNames.contains(member.getName()))
+            memberNames.add(member.getName());
     }
 
     public static void removeMember(String name) {
