@@ -148,11 +148,11 @@ public class PingReceiver extends Thread{
                                 break;
                             String s = "" + message.getMessageContent().get("incarnationNo");
                             logger.info(s);
-                            if(message.getMessageContent().get("incarnationNo") instanceof Integer){
-                                logger.info("yes");
-                            }
-                            int incarnationNo = (int) message.getMessageContent().get("incarnationNo");
-                            logger.info("No");
+//                            if(message.getMessageContent().get("incarnationNo") instanceof Integer){
+//                                logger.info("yes");
+//                            }
+//                            int incarnationNo = (int) message.getMessageContent().get("incarnationNo");
+//                            logger.info("No");
                             MembershipList.addMember(
                                     new Member((String) message.getMessageContent().get("senderName"),
                                             (String) message.getMessageContent().get("senderIp"),
@@ -160,7 +160,7 @@ public class PingReceiver extends Thread{
                                             (String) message.getMessageContent().get("versionNo"),
                                             "alive",
                                             Member.getLocalDateTime(),
-                                            String.valueOf(incarnationNo))
+                                            s)
                             );
                             MembershipList.printMembers();
                         }
