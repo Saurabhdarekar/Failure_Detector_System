@@ -25,6 +25,8 @@ public class CLIPrinter {
         try{
             lock.lock();
             String threadName = Thread.currentThread().getName();
+            System.out.println( "Logs for " + machineName);
+            for (String result : results) {System.out.println(result);}
             if(!optionsList.isEmpty() && optionsList.contains('c'))
                 logger.info( machineName + " No of lines found are : " + results.get(0));
             else
