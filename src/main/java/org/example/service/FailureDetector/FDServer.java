@@ -183,6 +183,7 @@ public class FDServer extends Thread {
                                     dissemination.sendAliveMessage(member);
                             }
                         } else if (response.equals("Unsuccessful")) {
+                            logger.debug("Currently inside FD Server with suspicion mode value " + String.valueOf(FDProperties.getFDProperties().get("isSuspicionModeOn")));
                             if ((Boolean) FDProperties.getFDProperties().get("isSuspicionModeOn")) {
                                 //Put the node in the suspect mode and call the disseminator to spread the suspect message
                                 if (!member.getStatus().equals("Suspected"))
