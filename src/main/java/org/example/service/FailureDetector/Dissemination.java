@@ -34,7 +34,7 @@ public class Dissemination {
             member.setDateTime(Member.getLocalDateTime());
             //TODO add the incarnation number
             MembershipList.members.put(member.getName(), member);
-            logger.info("Node is Suspected : {}", member.getName());
+            System.out.println("Node is Suspected : "+ member.getName());
             Map<String, Object> messageContent = new HashMap<>();
             messageContent.put("messageName", "suspect");
             messageContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
@@ -52,7 +52,7 @@ public class Dissemination {
 
     public void sendSelfAliveMessage() {
         try {
-            logger.info("Setting self alive");
+            System.out.println("Setting self alive");
             Map<String, Object> messageContent = new HashMap<>();
             messageContent.put("messageName", "alive");
             messageContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
@@ -100,7 +100,7 @@ public class Dissemination {
             member.setStatus("Alive");
             member.setDateTime(Member.getLocalDateTime());
             MembershipList.members.put(member.getName(), member);
-            logger.info("Node is Alive : {}", member.getName());
+            System.out.println("Node is Alive : "+ member.getName());
             Map<String, Object> messageContent = new HashMap<>();
             messageContent.put("messageName", "alive");
             messageContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
@@ -120,7 +120,7 @@ public class Dissemination {
 
     public void sendFailedMessage(Member removeMember) {
         try {
-            logger.info("Node has Failed : " + removeMember.getName());
+            System.out.println("Node has Failed : " + removeMember.getName());
             Map<String, Object> removeContent = new HashMap<>();
             removeContent.put("messageName", "failed");
             removeContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
@@ -140,7 +140,7 @@ public class Dissemination {
     public void sendLeaveMessage() {
         try {
             String  memberName = String.valueOf(FDProperties.getFDProperties().get("machineName"));
-            logger.info("Node is Leaving : " + memberName);
+            System.out.println("Node is Leaving : " + memberName);
             Map<String, Object> removeContent = new HashMap<>();
             removeContent.put("messageName", "failed");
             removeContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
@@ -157,7 +157,7 @@ public class Dissemination {
 
     public void sendConfirmMessage(Member removeMember) {
         try {
-            logger.info("Node was in Suspect state and since there is no Alive message, Node Failed : " + removeMember.getName());
+            System.out.println("Node was in Suspect state and since there is no Alive message, Node Failed : " + removeMember.getName());
             Map<String, Object> removeContent = new HashMap<>();
             removeContent.put("messageName", "confirm");
             removeContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
@@ -178,12 +178,12 @@ public class Dissemination {
         try{
             //Switch mode for self
             if((Boolean) FDProperties.getFDProperties().get("isSuspicionModeOn")) {
-                logger.info("Switching to Basic Swim");
+                System.out.println("Switching to Basic Swim");
                 FDProperties.getFDProperties().put("isSuspicionModeOn", false);
                 FDProperties.getFDProperties().put("ackWaitPeriod", FDProperties.getFDProperties().get("basicSwimWaitPeriod"));
             }
             else {
-                logger.info("Switching to Suspicion Mode");
+                System.out.println("Switching to Suspicion Mode");
                 FDProperties.getFDProperties().put("isSuspicionModeOn", true);
                 FDProperties.getFDProperties().put("ackWaitPeriod", FDProperties.getFDProperties().get("suspicionSwimWaitPeriod"));
             }

@@ -92,7 +92,7 @@ public class PingReceiver extends Thread{
                 case "alive":
                     try {
                         if (message.getMessageContent().get("isIntroducing").equals("true") && (Boolean) FDProperties.getFDProperties().get("isIntroducer")) {
-                            logger.info("A node wants to join a group with ip address " + packet.getAddress() + ":" + packet.getPort()
+                            System.out.println("A node wants to join a group with ip address " + packet.getAddress() + ":" + packet.getPort()
                                     + " with version " + message);
                             String result = "";
                             //if a node sends an alive message to join the group then multicast that message to everyone
@@ -142,7 +142,7 @@ public class PingReceiver extends Thread{
                                 }
                             }
                         } else {
-                            logger.info("Alive message received");
+                            System.out.println("Alive message received : " + FDProperties.getFDProperties().get("machineName"));
                             if (message.getMessageContent().get("senderName").equals(FDProperties.getFDProperties().get("machineName")))
                                 break;
                             MembershipList.addMember(
@@ -234,7 +234,7 @@ public class PingReceiver extends Thread{
                     }
                     break;
                 case "failed" :
-                    logger.info("Failed message received");
+                    System.out.println("Failed message received");
                     try {
                         if(!message.getMessageContent().get("memberName").equals(FDProperties.getFDProperties().get("machineName"))) {
                             MembershipList.removeMember((String) message.getMessageContent().get("memberName"));
@@ -244,7 +244,7 @@ public class PingReceiver extends Thread{
                     }
                     break;
                 case "suspect" :
-                    logger.info("Suspect message received");
+                    System.out.println("Suspect message received");
                     try{
                         //TODO add a piece of code to set the status of a member to suspect
                         //TODO add a piece of code which will send alive multicast if the suspect node is itself
@@ -267,7 +267,7 @@ public class PingReceiver extends Thread{
                     }
                     break;
                 case "confirm" :
-                    logger.info("Confirm message received");
+                    System.out.println("Confirm message received");
                     try {
                         //TODO add a piece of code that will remove the member from the list
                         if(!message.getMessageContent().get("memberName").equals(FDProperties.getFDProperties().get("machineName"))) {
@@ -281,12 +281,12 @@ public class PingReceiver extends Thread{
                     break;
                 case "switch" :
                     if((Boolean) FDProperties.getFDProperties().get("isSuspicionModeOn")) {
-                        logger.info("Switching to Basic Swim");
+                        System.out.println("Switching to Basic Swim");
                         FDProperties.getFDProperties().put("isSuspicionModeOn", false);
                         FDProperties.getFDProperties().put("ackWaitPeriod", FDProperties.getFDProperties().get("basicSwimWaitPeriod"));
                     }
                     else {
-                        logger.info("Switching to Suspicion Mode");
+                        System.out.println("Switching to Suspicion Mode");
                         FDProperties.getFDProperties().put("isSuspicionModeOn", true);
                         FDProperties.getFDProperties().put("ackWaitPeriod", FDProperties.getFDProperties().get("suspicionSwimWaitPeriod"));
                     }
