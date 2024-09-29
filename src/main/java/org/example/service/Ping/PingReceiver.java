@@ -98,7 +98,7 @@ public class PingReceiver extends Thread{
                     try {
                         if (message.getMessageContent().get("isIntroducing").equals("true") && (Boolean) FDProperties.getFDProperties().get("isIntroducer")) {
                             System.out.println("A node wants to join a group with ip address " + packet.getAddress() + ":" + packet.getPort()
-                                    + " with version " + message);
+                                    + " with version " + message + "__" + Member.getLocalDateTime());
                             String result = "";
                             //if a node sends an alive message to join the group then multicast that message to everyone
                             try {
@@ -148,7 +148,7 @@ public class PingReceiver extends Thread{
                             }
                         } else {
                             logger.info("Got Alive message" + message.getMessageContent().get("incarnationNo"));
-                            System.out.println("Alive message received : " + message.getMessageContent().get("senderName"));
+                            System.out.println("Alive message received : " + message.getMessageContent().get("senderName") + "__" + Member.getLocalDateTime());
                             if (message.getMessageContent().get("senderName").equals(FDProperties.getFDProperties().get("machineName")))
                                 break;
                             String s = "" + message.getMessageContent().get("incarnationNo");
@@ -249,7 +249,7 @@ public class PingReceiver extends Thread{
                     }
                     break;
                 case "failed" :
-                    System.out.println("Failed message received" + message.getMessageContent().get("memberName"));
+                    System.out.println("Failed message received" + message.getMessageContent().get("memberName") + "__" + Member.getLocalDateTime());
                     logger.info("Failed message received" + message.getMessageContent().get("memberName"));
                     try {
                         if(!message.getMessageContent().get("memberName").equals(FDProperties.getFDProperties().get("machineName"))) {
@@ -260,7 +260,7 @@ public class PingReceiver extends Thread{
                     }
                     break;
                 case "suspect" :
-                    System.out.println("Suspect message received " + message.getMessageContent().get("memberName"));
+                    System.out.println("Suspect message received " + message.getMessageContent().get("memberName") + "__" + Member.getLocalDateTime());
                     logger.info("Suspect message received " + message.getMessageContent().get("memberName"));
                     try{
                         //TODO add a piece of code to set the status of a member to suspect
@@ -284,7 +284,7 @@ public class PingReceiver extends Thread{
                     }
                     break;
                 case "confirm" :
-                    System.out.println("Confirm message received " + message.getMessageContent().get("memberName") );
+                    System.out.println("Confirm message received " + message.getMessageContent().get("memberName") + "__" + Member.getLocalDateTime() );
                     logger.info("Confirm message received " + message.getMessageContent().get("memberName") );
                     try {
                         //TODO add a piece of code that will remove the member from the list

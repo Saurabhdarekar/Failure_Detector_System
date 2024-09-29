@@ -123,8 +123,8 @@ public class Dissemination {
 
     public void sendFailedMessage(Member removeMember) {
         try {
-            System.out.println("Node has Failed : " + removeMember.getName());
-            logger.info("Node has Failed : " + removeMember.getName() + "__" + Member.getLocalDateTime());
+            System.out.println("Node has Failed : " + removeMember.getName() + "__" + Member.getLocalDateTime());
+            logger.info("Node has Failed : " + removeMember.getName());
             Map<String, Object> removeContent = new HashMap<>();
             removeContent.put("messageName", "failed");
             removeContent.put("senderIp", FDProperties.getFDProperties().get("machineIp"));
