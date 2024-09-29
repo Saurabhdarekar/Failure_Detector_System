@@ -59,8 +59,6 @@ public class Dissemination {
             messageContent.put("senderPort", FDProperties.getFDProperties().get("machinePort"));
             messageContent.put("msgId", FDProperties.generateRandomMessageId());
             messageContent.put("senderName", FDProperties.getFDProperties().get("machineName"));
-            messageContent.put("memberIp", FDProperties.getFDProperties().get("machineIp"));
-            messageContent.put("memberPort", FDProperties.getFDProperties().get("machinePort"));
             messageContent.put("versionNo", String.valueOf(FDProperties.getFDProperties().get("versionNo")));
             messageContent.put("incarnationNo", String.valueOf(FDProperties.getFDProperties().get("incarnationNo")));
             PingSender pingSender = new PingSender();
