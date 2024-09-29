@@ -39,6 +39,7 @@ public class PingSender extends Thread {
             String s = objectMapper.writeValueAsString(message.getMessageContent());
 //            System.out.println(s);
             byte[] buf = s.getBytes();
+            logger.debug("Printing buffer length: " + buf.length);
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
             socket.send(packet);
@@ -72,6 +73,7 @@ public class PingSender extends Thread {
             ObjectMapper objectMapper = new ObjectMapper();
             String s = objectMapper.writeValueAsString(message.getMessageContent());
             byte[] buf = s.getBytes();
+            logger.debug("Printing buffer length: " + buf.length);
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
             socket.send(packet);
@@ -91,6 +93,7 @@ public class PingSender extends Thread {
             //This node will wait for below timeout for the target node to send the ack
 //            socket.setSoTimeout((int)FDProperties.getFDProperties().get("ackWaitPeriod"));
             byte[] buf = json.getBytes();
+            logger.debug("Printing buffer length: " + buf.length);
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length, message.getIpAddress(), Integer.parseInt(message.getPort()));
             socket.send(packet);
