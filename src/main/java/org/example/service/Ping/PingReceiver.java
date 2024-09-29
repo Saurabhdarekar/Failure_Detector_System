@@ -147,6 +147,8 @@ public class PingReceiver extends Thread{
                             if (message.getMessageContent().get("senderName").equals(FDProperties.getFDProperties().get("machineName")))
                                 break;
                             String s = "" + message.getMessageContent().get("incarnationNo");
+                            String t = "" + message.getMessageContent().get("versionNo");
+                            String k = "" + message.getMessageContent().get("senderPort");
                             logger.info(s);
 //                            if(message.getMessageContent().get("incarnationNo") instanceof Integer){
 //                                logger.info("yes");
@@ -156,8 +158,8 @@ public class PingReceiver extends Thread{
                             MembershipList.addMember(
                                     new Member((String) message.getMessageContent().get("senderName"),
                                             (String) message.getMessageContent().get("senderIp"),
-                                            ((String) message.getMessageContent().get("senderPort")),
-                                            (String) message.getMessageContent().get("versionNo"),
+                                            k,
+                                            t,
                                             "alive",
                                             Member.getLocalDateTime(),
                                             s)
