@@ -61,6 +61,7 @@ public class Dissemination {
             messageContent.put("senderName", FDProperties.getFDProperties().get("machineName"));
             messageContent.put("versionNo", String.valueOf(FDProperties.getFDProperties().get("versionNo")));
             messageContent.put("incarnationNo", String.valueOf(FDProperties.getFDProperties().get("incarnationNo")));
+            messageContent.put("isIntroducing", "false");
             PingSender pingSender = new PingSender();
             pingSender.multicast("alive", messageContent);
         }catch (Exception e) {
@@ -107,6 +108,7 @@ public class Dissemination {
             messageContent.put("memberName", member.getName());
             messageContent.put("memberIp", member.getIpAddress());
             messageContent.put("memberPort", member.getPort());
+            messageContent.put("isIntroducing", "false");
             messageContent.put("versionNo", String.valueOf(FDProperties.getFDProperties().get("versionNo")));
             messageContent.put("incarnationNo", String.valueOf(FDProperties.getFDProperties().get("incarnationNo")));
             PingSender pingSender = new PingSender();
