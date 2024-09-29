@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.example.entities.FDProperties.fDProperties;
+
 // Comma class that will be executed by multiple threads
 public class CommandLine implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(CommandLine.class);
@@ -26,13 +28,12 @@ public class CommandLine implements Runnable {
             String command = scanner.nextLine();
             Dissemination d = new Dissemination();
             try {
-                if (command.startsWith("grep_log")) {
-                    int index = command.indexOf("grep_log");
-                    if (index != -1) {
-                        String grepCommand = command.substring(index + "grep_log".length()).trim();
-                        Client c = new Client();
-                        c.runClient(grepCommand);
-                    }
+                if (command.startsWith("grep")) {
+                    Client c = new Client();
+                    c.runClient(command);
+                } else if(command.startsWith("drop")) {
+                    double dropProb = Double.parseDouble(command.substring(4));
+                    fDProperties.put("dropProbability", dropProb);
                 } else {
                     switch (command) {
                         case "list_mem":
