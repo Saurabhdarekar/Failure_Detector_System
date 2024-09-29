@@ -46,11 +46,16 @@ public class PingReceiver extends Thread{
                     packet.getData(), 0, packet.getLength());
             Message message = Message.process(address, String.valueOf(port), received);
 
+            String messageName = message.getMessageName();
+            Random rand = new Random();
+            if (rand.nextDouble() < (double)FDProperties.getFDProperties().get("dropProbability")) {
+                messageName = "Unsuccessful";
+            }
             //TODO based on the message received take the action
             //TODO add the introducer under this class and set a flag of if introducer then only execute the below code
             //TODO same will be for suspicion mode.
             //Add a switch case
-            switch (message.getMessageName()){
+            switch (messageName){
                 case "introduction":
                     try {
                         logger.info("Introduction successful message received");
