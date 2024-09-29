@@ -111,6 +111,7 @@ public class Dissemination {
             messageContent.put("isIntroducing", "false");
             messageContent.put("versionNo", String.valueOf(FDProperties.getFDProperties().get("versionNo")));
             messageContent.put("incarnationNo", String.valueOf(FDProperties.getFDProperties().get("incarnationNo")));
+            messageContent.put("senderName", FDProperties.getFDProperties().get("machineName"));
             PingSender pingSender = new PingSender();
             pingSender.multicast("alive", messageContent);
         }catch (Exception e) {
