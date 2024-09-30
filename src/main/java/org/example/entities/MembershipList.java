@@ -14,7 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
-
+/**
+ * This is the Membershiplist  entity class
+ */
 public class MembershipList {
 
     public static ConcurrentHashMap<String, Member> members = new ConcurrentHashMap<>();

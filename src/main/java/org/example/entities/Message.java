@@ -7,6 +7,9 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This is the message class
+ */
 public class Message {
     String messageName;
     InetAddress ipAddress;

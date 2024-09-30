@@ -14,6 +14,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * This is the main failure detector server
+ */
 public class FDServer extends Thread {
     private static final Logger logger = LoggerFactory.getLogger(FDServer.class);
     private Dissemination dissemination;

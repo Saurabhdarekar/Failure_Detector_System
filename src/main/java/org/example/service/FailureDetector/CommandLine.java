@@ -13,6 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import static org.example.entities.FDProperties.fDProperties;
 
 // Comma class that will be executed by multiple threads
+/**
+ * This Class is handle command line commands
+ */
 public class CommandLine implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(CommandLine.class);
     private ConcurrentHashMap<String, Integer> map;

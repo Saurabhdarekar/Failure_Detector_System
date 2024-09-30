@@ -3,6 +3,9 @@ package org.example.entities;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * This is the member entity class
+ */
 public class Member {
     String name;
     String ipAddress;

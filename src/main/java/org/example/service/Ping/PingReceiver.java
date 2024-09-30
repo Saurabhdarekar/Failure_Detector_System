@@ -17,6 +17,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * This class contains pingReceiver logic
+ */
 public class PingReceiver extends Thread{
     private static final Logger logger = LoggerFactory.getLogger(PingReceiver.class);
 

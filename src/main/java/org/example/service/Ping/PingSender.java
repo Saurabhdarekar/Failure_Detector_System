@@ -13,6 +13,9 @@ import java.net.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * This class contains pingsender logic
+ */
 public class PingSender extends Thread {
 
     private static final Logger logger = LoggerFactory.getLogger(PingSender.class);

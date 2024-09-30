@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * This Class contains Dissemination logic
+ */
 public class Dissemination {
 
     private static final Logger logger = LoggerFactory.getLogger(Dissemination.class);
@@ -28,6 +30,10 @@ public class Dissemination {
         pingReceiver.start();
     }
 
+    /**
+     * This methods sends suspect Message
+     * @param member
+     */
     public void sendSuspectMessage(Member member) {
         try {
             member.setStatus("Suspected");
@@ -50,6 +56,9 @@ public class Dissemination {
         }
     }
 
+    /**
+     * This method sends alive message
+     */
     public void sendSelfAliveMessage() {
         try {
             System.out.println("Setting self alive"  + "__" + Member.getLocalDateTime());
@@ -70,6 +79,9 @@ public class Dissemination {
         }
     }
 
+    /**
+     * This method sends alive message to introducer
+     */
     public void sendAliveMessageToIntroducer(){
         PingSender pingSender = new PingSender();
         Map<String, Object> messageContent = new HashMap<>();
@@ -95,6 +107,10 @@ public class Dissemination {
         FDProperties.getFDProperties().put("versionNo", Member.getLocalDateTime());
     }
 
+    /**
+     * This method sends alive message
+     * @param member
+     */
     public void sendAliveMessage(Member member) {
         try {
             member.setStatus("Alive");
@@ -121,6 +137,10 @@ public class Dissemination {
         }
     }
 
+    /**
+     * This method sends failed message
+     * @param removeMember
+     */
     public void sendFailedMessage(Member removeMember) {
         try {
             System.out.println("Node has Failed : " + removeMember.getName() + "__" + Member.getLocalDateTime());
@@ -141,6 +161,9 @@ public class Dissemination {
         }
     }
 
+    /**
+     * This method sends leave message
+     */
     public void sendLeaveMessage() {
         try {
             String  memberName = String.valueOf(FDProperties.getFDProperties().get("machineName"));
@@ -160,6 +183,10 @@ public class Dissemination {
         }
     }
 
+    /**
+     * This method sends confirm message
+     * @param removeMember
+     */
     public void sendConfirmMessage(Member removeMember) {
         try {
             System.out.println("Node was in Suspect state and since there is no Alive message, Node Failed : " + removeMember.getName() + "__" + Member.getLocalDateTime());
@@ -180,6 +207,10 @@ public class Dissemination {
         }
     }
 
+    /**
+     * This method is used to multicast the isSuspicionModeOn command
+     * @return
+     */
     public String sendSwitch(){
         try{
             //Switch mode for self
